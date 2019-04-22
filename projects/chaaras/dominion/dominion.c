@@ -1408,7 +1408,7 @@ int adventurerEffect(struct gameState *state)
       shuffle(currentPlayer, state);
     }
     drawCard(currentPlayer, state);
-    cardDrawn = state->hand[currentPlayer][state->handCount[currentPlayer] - 1]; //top card of hand is most recently drawn card.
+    cardDrawn = state->hand[currentPlayer][state->handCount[currentPlayer]]; //top card of hand is most recently drawn card.
     if (cardDrawn == copper || cardDrawn == silver || cardDrawn == gold)
       drawnTreasure++;
     else
@@ -1433,7 +1433,7 @@ int smithyEffect(struct gameState *state, int handPos)
   int currentPlayer = whoseTurn(state);
 
   //+3 Cards
-  for (int i = 0; i < 3; i++)
+  for (int i = 0; i <= 3; i++)
   {
     drawCard(currentPlayer, state);
   }
@@ -1452,7 +1452,7 @@ int villageEffect(struct gameState *state, int handPos)
   drawCard(currentPlayer, state);
 
   //+2 Actions
-  state->numActions = state->numActions + 2;
+  state->numActions++;
 
   //discard played card from hand
   discardCard(handPos, currentPlayer, state, 0);
@@ -1494,8 +1494,8 @@ int stewardEffect(struct gameState *state, int handPos, int choice1, int choice2
   else
   {
     //trash 2 cards in hand
-    discardCard(choice2, currentPlayer, state, 1);
-    discardCard(choice3, currentPlayer, state, 1);
+    discardCard(choice2, currentPlayer, state, 0);
+    discardCard(choice3, currentPlayer, state, 0);
   }
 
   //discard card from hand
