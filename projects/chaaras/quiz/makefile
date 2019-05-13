@@ -23,11 +23,11 @@ PROJNAME = testme
 #
 
 ${PROJNAME}: ${OBJS}
-	${CXX} ${OBJS} -o ${PROJNAME} -coverage
+	${CXX} ${OBJS} -o ${PROJNAME} --coverage
 	testme
 
 ${OBJS}: ${SRCS} ${HEADERS}
-	${CXX} ${CXXFLAGS} -c $(@:.o=.c)
+	${CXX} ${CXXFLAGS} -c $(@:.o=.c) --coverage
 
 #Remove executable and object files
 clean:

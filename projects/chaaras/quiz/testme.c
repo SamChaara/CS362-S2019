@@ -21,13 +21,13 @@ char *inputString()
   int randIdx = rand() % charListLength; 
   char newChar = charList[randIdx];
 
-  while(newChar != '\0')
+  do
   {
     strncat(s, &newChar, 1);
     
     randIdx = rand() % charListLength;
     newChar = charList[randIdx];
-  }
+  } while(newChar != '\0');
 
   return s;
 }
