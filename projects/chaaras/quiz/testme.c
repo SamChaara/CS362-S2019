@@ -18,15 +18,15 @@ char *inputString()
   int charListLength = sizeof(charList) / sizeof(charList[0]);
   char *s;
   s = malloc(sizeof(char) * 500);
-  int randIdx = rand() % charListLength; 
-  char newChar = charList[randIdx];
+  int randIdx; 
+  char newChar;
 
   do
   {
-    strncat(s, &newChar, 1);
-    
     randIdx = rand() % charListLength;
     newChar = charList[randIdx];
+
+    strncat(s, &newChar, 1);
   } while(newChar != '\0');
 
   return s;
