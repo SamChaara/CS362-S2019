@@ -2,6 +2,9 @@
 #include "dominion_helpers.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "rngs.h"
+#include <assert.h>
+#include <string.h>
 #include <stdbool.h>
 
 bool linearSearch(int* arr, int len, int val)
@@ -12,7 +15,6 @@ bool linearSearch(int* arr, int len, int val)
 	{
 		if(*(arr + i) == val)
 		{
-			printf("%d\n", *(arr + i));
 			found = true;
 		}
 	}
@@ -55,13 +57,64 @@ int initializeRandomGame(int k[10], struct gameState* G)
 	}
 	/***End generating random Kingdom cards***/
 
-	for(int i = 0; i < maxKCards; i++)
-	{
-		printf("%d\t", k[i]);
-	}
-	printf("\n");
+	// for(int i = 0; i < maxKCards; i++)
+	// {
+	// 	printf("%d\t", k[i]);
+	// }
+	// printf("\n");
 
 	return initializeGame(numPlayers, k, rSeed, G);
+}
+
+int testAdventurer(struct gameState *state)
+{
+	int failure = 0;
+	struct gameState orig;
+	memcpy(&orig, state, sizeof(struct gameState));
+
+	int player = whoseTurn(state);
+	int lastCard = state->hand[player][state->handCount[player]-1];
+
+	int ret = adventurerEffect(state);
+	//assert(ret == 0);
+	if(!(ret == 0))
+	{
+		failure = 1;
+	}
+
+	//Assert that the player drew two cards
+	//assert(state->handCount[player] == orig.handCount[player] + 2);
+	if(!(state->handCount[player] == orig.handCount[player] + 2))
+	{
+		failure = 1;
+	}
+
+	//Get the value of the last two cards drawn and the card that preceded them
+	int card1 = state->hand[player][state->handCount[player]-2];
+	int card2 = state->hand[player][state->handCount[player]-1];
+
+	//Assert that the last two cards drawn were Treasure cards
+	//assert(card1 == copper || card1 == silver || card1 == gold);
+	//assert(card2 == copper || card2 == silver || card2 == gold);
+
+	if(!(card1 == copper || card1 == silver || card1 == gold))
+	{
+		failure = 1;
+	}
+	if(!(card2 == copper || card2 == silver || card2 == gold))
+	{
+		failure = 1;
+	}
+
+	//Assert that the card that precedes the two drawn cards is the card that
+	//originally was the last card in hand.
+	//assert(lastCard == state->hand[player][state->handCount[player]-3]);
+	if(!(lastCard == state->hand[player][state->handCount[player]-3]))
+	{
+		failure = 1;
+	}
+
+	return failure;
 }
 
 int main()
@@ -70,12 +123,34 @@ int main()
 
 	printf("Random Tests: Adventurer\n");
 
-	struct gameState G;
-	int k[10];
+	int total = 1000;
+	int passed = 0;
+	int failed = 0;
 
-	int init = initializeRandomGame(k, &G);
+	for(int i = 0; i < total; i++)
+	{
+		struct gameState G;
+		int k[10];
+		int r;
 
-	printf("initializeRandomGame return value: %d\n", init);
+		int init = initializeRandomGame(k, &G);
+
+		if(init == 0)
+		{
+			r = testAdventurer(&G);
+			if(r == 0)
+			{
+				//printf(".");
+				passed++;
+			}
+			else
+			{
+				//printf("x");
+				failed++;
+			}
+		}
+	}
+	printf("\n%d Tests Completed\n\nPassed:\t%d\nFailed:\t%d\n", total, passed, failed);
 
 	return 0;
 }
