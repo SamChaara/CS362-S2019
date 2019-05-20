@@ -8,8 +8,9 @@ bool linearSearch(int* arr, int len, int val)
 {
 	bool found = false;
 	int sizeOfInt = sizeof(int);
+	int i = 0;
 
-	for (int i = 0; i < (len * sizeOfInt); i += sizeOfInt)
+	for (i = 0; i < (len * sizeOfInt); i += sizeOfInt)
 	{
 		if(*(arr + i) == val)
 		{
@@ -36,6 +37,7 @@ int initializeRandomGame(struct gameState* G)
 	int k[10];
 	int kCards = 0;
 	int maxKCards = 10;
+	int returnValue;
 	
 	//Add the card being tested to k
 	k[kCards] = testedCard;
@@ -56,7 +58,8 @@ int initializeRandomGame(struct gameState* G)
 	}
 	/***End generating random Kingdom cards***/
 	
-	return initializeGame(numPlayers, k, rSeed, &G);
+	returnValue = initializeGame(numPlayers, k, rSeed, &G);
+	return returnValue;
 }
 
 int main()
