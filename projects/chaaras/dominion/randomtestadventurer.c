@@ -37,7 +37,6 @@ int initializeRandomGame(struct gameState* G)
 	int k[10];
 	int kCards = 0;
 	int maxKCards = 10;
-	int returnValue;
 	
 	//Add the card being tested to k
 	k[kCards] = testedCard;
@@ -57,9 +56,8 @@ int initializeRandomGame(struct gameState* G)
 		}
 	}
 	/***End generating random Kingdom cards***/
-	
-	returnValue = initializeGame(numPlayers, k, rSeed, &G);
-	return returnValue;
+
+	return initializeGame(numPlayers, k, rSeed, &G);
 }
 
 int main()
@@ -68,7 +66,9 @@ int main()
 
 	printf("Random Tests: Adventurer.\n");
 
-	int init = initializeRandomGame;
+	struct gameState G;
+
+	int init = initializeRandomGame(&G);
 
 	printf("initializeRandomGame return value: %d", init);
 
