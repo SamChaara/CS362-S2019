@@ -38,6 +38,10 @@ player: player.c interface.o
 
 all: playdom player
 
+randomtestresults: testadventurer
+	randomtestadventurer
+	gcov randomtestadventurer.c -b > randomtestresults.out
+
 unittestresults:
 
 clean:
