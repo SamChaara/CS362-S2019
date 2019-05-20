@@ -30,7 +30,7 @@ int testAdventurer(struct gameState *state)
 	//originally was the last card in hand.
 	assert(lastCard == state->hand[player][state->handCount[player]-3]);
 
-	return 0;
+	return ret;
 }
 
 int main()
