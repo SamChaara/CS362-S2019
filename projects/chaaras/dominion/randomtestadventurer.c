@@ -7,13 +7,12 @@
 bool linearSearch(int* arr, int len, int val)
 {
 	bool found = false;
-	int sizeOfInt = sizeof(int);
-	int i = 0;
 
-	for (i = 0; i < (len * sizeOfInt); i += sizeOfInt)
+	for (int i = 0; i < len; i++)
 	{
 		if(*(arr + i) == val)
 		{
+			printf("%d\n", *(arr + i));
 			found = true;
 		}
 	}
@@ -21,7 +20,7 @@ bool linearSearch(int* arr, int len, int val)
 	return found;
 }
 
-int initializeRandomGame(struct gameState* G)
+int initializeRandomGame(int k[10], struct gameState* G)
 {
 	/*Generate a random number of players (2-4)*/
 	int numPlayers = rand() % 2 + 2;
@@ -34,7 +33,6 @@ int initializeRandomGame(struct gameState* G)
 	int allCards = 27;
 	int nonKingdomCards = 7;
 	int kingdomCards = allCards - nonKingdomCards;
-	int k[10];
 	int kCards = 0;
 	int maxKCards = 10;
 	
@@ -57,20 +55,27 @@ int initializeRandomGame(struct gameState* G)
 	}
 	/***End generating random Kingdom cards***/
 
-	return initializeGame(numPlayers, k, rSeed, &G);
+	for(int i = 0; i < maxKCards; i++)
+	{
+		printf("%d\t", k[i]);
+	}
+	printf("\n");
+
+	return initializeGame(numPlayers, k, rSeed, G);
 }
 
 int main()
 {
 	srand(0);
 
-	printf("Random Tests: Adventurer.\n");
+	printf("Random Tests: Adventurer\n");
 
 	struct gameState G;
+	int k[10];
 
-	int init = initializeRandomGame(&G);
+	int init = initializeRandomGame(k, &G);
 
-	printf("initializeRandomGame return value: %d", init);
+	printf("initializeRandomGame return value: %d\n", init);
 
 	return 0;
 }
