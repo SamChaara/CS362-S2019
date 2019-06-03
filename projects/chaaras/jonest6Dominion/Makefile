@@ -35,8 +35,8 @@ runtests: testDrawCard
 #########
 
 
-randomtestresults: dominion.c randomtestcard1.c randomtestcard2.c randomtestadventurer.c randomHelpers.c printHelpers.c testHelpers.c testCompare.c
-	make clean
+# randomtestresults: dominion.c randomtestcard1.c randomtestcard2.c randomtestadventurer.c randomHelpers.c printHelpers.c testHelpers.c testCompare.c
+# 	make clean
 
 	# 
 	# random tests
@@ -60,16 +60,16 @@ randomtestresults: dominion.c randomtestcard1.c randomtestcard2.c randomtestadve
 	# echo "" >> randomtestresults.out
 	# gcov -nb dominion.c >> randomtestresults.out
 
-	# random test card adventurer
-	echo "\n--- randomtestcardadventurer.c ---" >> randomtestresults.out
-	gcc -o randomtestcardadventurer -g randomtestcardadventurer.c dominion.c rngs.c randomHelpers.c printHelpers.c testHelpers.c testCompare.c $(CFLAGS)
-	./randomtestcardadventurer >> randomtestresults.out
-	echo "" >> randomtestresults.out
-	gcov -nb dominion.c >> randomtestresults.out
+	# # random test card adventurer
+	# echo "\n--- randomtestcardadventurer.c ---" >> randomtestresults.out
+	# gcc -o randomtestcardadventurer -g randomtestcardadventurer.c dominion.c rngs.c randomHelpers.c printHelpers.c testHelpers.c testCompare.c $(CFLAGS)
+	# ./randomtestcardadventurer >> randomtestresults.out
+	# echo "" >> randomtestresults.out
+	# gcov -nb dominion.c >> randomtestresults.out
 
-	# detailed random test card gcov results
-	echo "\n\n*****  COVERAGE DETAILS  *****\n" >> randomtestresults.out
-	gcov dominion.c -fb >> randomtestresults.out
+	# # detailed random test card gcov results
+	# echo "\n\n*****  COVERAGE DETAILS  *****\n" >> randomtestresults.out
+	# gcov dominion.c -fb >> randomtestresults.out
 
 
 
