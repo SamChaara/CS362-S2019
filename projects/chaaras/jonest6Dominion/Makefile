@@ -35,30 +35,30 @@ runtests: testDrawCard
 #########
 
 
-randomtestresults: dominion.c randomtestcard1.c randomtestcard2.c randomtestcardadventurer.c randomHelpers.c printHelpers.c testHelpers.c testCompare.c
+randomtestresults: dominion.c randomtestcard1.c randomtestcard2.c randomtestadventurer.c randomHelpers.c printHelpers.c testHelpers.c testCompare.c
 	make clean
 
 	# 
 	# random tests
 	# 
-	echo "*****  RANDOM TESTS  ***** " > randomtestresults.out
-	echo "\n*\tNOTE: A lot of test cases are printed here. In order to show only the" >> randomtestresults.out
-	echo "*\tfailing tests, change the value of the PRINT_ON_SUCCESS variable in the" >> randomtestresults.out
-	echo "*\ttestCompare.h file from 1 to 0.\n" >> randomtestresults.out
+	# echo "*****  RANDOM TESTS  ***** " > randomtestresults.out
+	# echo "\n*\tNOTE: A lot of test cases are printed here. In order to show only the" >> randomtestresults.out
+	# echo "*\tfailing tests, change the value of the PRINT_ON_SUCCESS variable in the" >> randomtestresults.out
+	# echo "*\ttestCompare.h file from 1 to 0.\n" >> randomtestresults.out
 
-	# random test card 1
-	echo "\n--- randomtestcard1.c ---" >> randomtestresults.out
-	gcc -o randomtestcard1 -g randomtestcard1.c dominion.c rngs.c randomHelpers.c printHelpers.c testHelpers.c testCompare.c $(CFLAGS)
-	./randomtestcard1 >> randomtestresults.out
-	echo "" >> randomtestresults.out
-	gcov -nb dominion.c >> randomtestresults.out
+	# # random test card 1
+	# echo "\n--- randomtestcard1.c ---" >> randomtestresults.out
+	# gcc -o randomtestcard1 -g randomtestcard1.c dominion.c rngs.c randomHelpers.c printHelpers.c testHelpers.c testCompare.c $(CFLAGS)
+	# ./randomtestcard1 >> randomtestresults.out
+	# echo "" >> randomtestresults.out
+	# gcov -nb dominion.c >> randomtestresults.out
 
-	# random test card 2
-	echo "\n--- randomtestcard2.c ---" >> randomtestresults.out
-	gcc -o randomtestcard2 -g randomtestcard2.c dominion.c rngs.c randomHelpers.c printHelpers.c testHelpers.c testCompare.c $(CFLAGS)
-	./randomtestcard2 >> randomtestresults.out
-	echo "" >> randomtestresults.out
-	gcov -nb dominion.c >> randomtestresults.out
+	# # random test card 2
+	# echo "\n--- randomtestcard2.c ---" >> randomtestresults.out
+	# gcc -o randomtestcard2 -g randomtestcard2.c dominion.c rngs.c randomHelpers.c printHelpers.c testHelpers.c testCompare.c $(CFLAGS)
+	# ./randomtestcard2 >> randomtestresults.out
+	# echo "" >> randomtestresults.out
+	# gcov -nb dominion.c >> randomtestresults.out
 
 	# random test card adventurer
 	echo "\n--- randomtestcardadventurer.c ---" >> randomtestresults.out
