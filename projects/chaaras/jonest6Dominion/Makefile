@@ -62,7 +62,7 @@ randomtestresults: dominion.c randomtestcard1.c randomtestcard2.c randomtestadve
 
 	# random test card adventurer
 	echo "\n--- randomtestcardadventurer.c ---" >> randomtestresults.out
-	gcc -o randomtestcardadventurer -g randomtestcardadventurer.c dominion.c rngs.c randomHelpers.c printHelpers.c testHelpers.c testCompare.c $(CFLAGS)
+	gcc -o randomtestcardadventurer -g randomtestadventurer.c dominion.c rngs.c randomHelpers.c printHelpers.c testHelpers.c testCompare.c $(CFLAGS)
 	./randomtestcardadventurer >> randomtestresults.out
 	echo "" >> randomtestresults.out
 	gcov -nb dominion.c >> randomtestresults.out
