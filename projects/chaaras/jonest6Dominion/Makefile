@@ -62,7 +62,7 @@ randomtestresults: dominion.c randomtestcard1.c randomtestcard2.c randomtestadve
 
 	# random test card adventurer
 	echo "\n--- randomtestcardadventurer.c ---" >> randomtestresults.out
-	gcc -o randomtestcardadventurer -g randomtestadventurer.c dominion.c rngs.c randomHelpers.c printHelpers.c testHelpers.c testCompare.c $(CFLAGS)
+	gcc -o randomtestcardadventurer -g randomtestcardadventurer.c dominion.c rngs.c randomHelpers.c printHelpers.c testHelpers.c testCompare.c $(CFLAGS)
 	./randomtestcardadventurer >> randomtestresults.out
 	echo "" >> randomtestresults.out
 	gcov -nb dominion.c >> randomtestresults.out
@@ -75,6 +75,12 @@ randomtestresults: dominion.c randomtestcard1.c randomtestcard2.c randomtestadve
 
 #########
 
+
+randomtestresults: testadventurer
+	randomtestadventurer
+	gcov randomtestadventurer.c -b > randomtestresults.out
+
+
 player: player.c interface.o
 	gcc -o player player.c -g  dominion.o rngs.o interface.o $(CFLAGS)
 
@@ -86,5 +92,5 @@ all: playdom player
 clean:
 	rm -f *.o playdom.exe playdom player player.exe testDrawCard testDrawCard.exe
 	rm -f *.gcov *.gcda *.gcno *.so *.out *.info
-	rm -f randomtestcard1 randomtestcard2 randomtestcardadventurer
+	rm -f randomtestcard1 randomtestcard2 randomtestcardadventurer randomtestadventurer randomtestadventurer.exe
 	rm -rf *.dSYM
