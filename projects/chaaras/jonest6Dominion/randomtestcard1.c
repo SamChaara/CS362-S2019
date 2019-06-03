@@ -1,0 +1,195 @@
+#include "randomHelpers.h"
+#include "printHelpers.h"
+#include "testHelpers.h"
+
+
+
+// the number of times to test the card
+#define DEFAULT_TRIALS 500
+
+// the card being tested
+#define TEST_CARD "village"
+#define TEST_FUNCTION "villageEffect"
+
+
+
+/**
+ * Runs a test case for the villageEffect function and prints the test results accordingly.
+ */
+void checkVillage(struct gameState* pre, struct gameState* post, int player, int handPos, int* totalPassed, int* totalFailed) {
+  const int TEST_CASES = 9;
+  int passingTests = TEST_CASES;
+  char* rule;
+
+  // run the test case
+  villageEffect(player, post, handPos);
+
+  /* Test #1 -- Test the resulting hand count. */
+  if (pre->deckCount[player] > 0) {
+    rule = "If the player's deck isn't empty, the player's hand count should remain the same";
+    printDebugRule(rule);
+    if (!testEqualBool(TEST_FUNCTION, rule, false, player_handcount_did_change(pre, post, player))) {
+      passingTests--;
+    }
+  } else {
+    rule = "If the player's deck is empty, the player's hand count should decrease by exactly 1";
+    printDebugRule(rule);
+    if (!testEqualToInt(TEST_FUNCTION, rule, -1, player_handcount_difference(pre, post, player))) {
+      passingTests--;
+    }
+  }
+
+  /* Test #2 -- The number of actions should increase by exactly 2. */
+  rule = "The number of actions should increase by exactly 2";
+  printDebugRule(rule);
+  if (!testEqualToInt(TEST_FUNCTION, rule, +2, game_actions_difference(pre, post))) {
+    passingTests--;
+  }
+
+  /* Test #3 -- The number of cards played should increase by exactly 1. */
+  rule = "The number of cards played should increase by exactly 1";
+  printDebugRule(rule);
+  if (!testEqualToInt(TEST_FUNCTION, rule, +1, cards_played_difference(pre, post))) {
+    passingTests--;
+  }
+
+  /* Test #4 -- Test the resulting deck count difference. */
+  if (pre->deckCount[player] > 0) {
+    rule = "If the player's deck isn't empty, the current player's deck should have exactly 1 fewer card";
+    printDebugRule(rule);
+    if (!testEqualToInt(TEST_FUNCTION, rule, -1, player_deckcount_difference(pre, post, player))) {
+      passingTests--;
+    }
+  } else {
+    rule = "If the player's deck is empty, the current player's deck count should not change";
+    printDebugRule(rule);
+    if (!testEqualBool(TEST_FUNCTION, rule, false, player_deckcount_did_change(pre, post, player))) {
+      passingTests--;
+    }
+  }
+
+  /* Test #5 -- No other player's hand count should change. */
+  rule = "No other player's hand should change";
+  printDebugRule(rule);
+  if (!testEqualBool(TEST_FUNCTION, rule, false, any_other_player_hand_did_change(pre, post, player))) {
+    passingTests--;
+  }
+
+  /* Test #6 -- No other player's deck count should change. */
+  rule = "No other player's deck should change";
+  printDebugRule(rule);
+  if (!testEqualBool(TEST_FUNCTION, rule, false, any_other_player_deck_did_change(pre, post, player))) {
+    passingTests--;
+  }
+
+  /* Test #7 -- No other player's discard pile count should change. */
+  rule = "No other player's discard pile should change";
+  printDebugRule(rule);
+  if (!testEqualBool(TEST_FUNCTION, rule, false, any_other_player_discard_did_change(pre, post, player))) {
+    passingTests--;
+  }
+
+  /* Test #8 -- There shouldn't be any change to the pile of victory cards. */
+  rule = "No state change should occur to the victory card pile";
+  printDebugRule(rule);
+  if (!testEqualToInt(TEST_FUNCTION, rule, 0, victory_card_delta(pre, post))) {
+    passingTests--;
+  }
+
+  /* Test #9 -- There shouldn't be any change to the pile of kingdom cards. */
+  rule = "No state change should occur to the kingdom card pile";
+  printDebugRule(rule);
+  if (!testEqualToInt(TEST_FUNCTION, rule, 0, kingdom_card_delta(pre, post))) {
+    passingTests--;
+  }
+
+
+  *totalPassed += passingTests;
+  *totalFailed += (TEST_CASES - passingTests);
+
+  // if any tests failed, print the state for inspection.
+  if (TEST_CASES - passingTests > 0) {
+    fprintf(stderr, "\n\nPRE: "); printState(pre);
+    fprintf(stderr, "\nPOST: "); printState(post);
+  }
+}
+
+
+
+
+int main(int argc, char** argv) {
+  // seed random
+  srand(time(NULL));
+
+  // 
+  // constants
+  // 
+  const int TRIALS = argc >= 2 ? atoi(argv[1]) : DEFAULT_TRIALS;
+
+  // 
+  // state variables
+  // 
+  int seed;
+  int numPlayers;
+  int currentPlayer;
+  int handPos;
+  int cards[10];
+
+  struct gameState pre;
+  struct gameState post;
+
+  int totalPassed = 0;
+  int totalFailed = 0;
+
+  // 
+  // trials
+  // 
+
+  printf("\nCard: %s\nFunction: %s\n\n", TEST_CARD, TEST_FUNCTION);
+  printf("** PHASE 1 :: %d TESTS :: Initializing a new game for each %s card test...\n", TRIALS, TEST_CARD);
+
+  for (int i = 0; i < TRIALS; i++) {
+    currentPlayer = pre.whoseTurn;  
+
+    // randomize the state variables
+    seed = randInt();
+    numPlayers = randIntRange(2, 4);
+    currentPlayer = randIntRange(0, numPlayers - 1);
+    getRandomKingdomCards(cards);
+
+    // make sure the village card is one of the kingdom cards
+    if (!inArray(cards, 10, village)) {
+      cards[0] = village;
+    }
+
+    initializeGame(numPlayers, cards, seed, &pre);
+    randomizePlayerHands(cards, &pre);
+    randomizePlayerDecks(cards, &pre);
+
+    pre.whoseTurn = currentPlayer;
+    handPos = randIntRange(0, pre.handCount[pre.whoseTurn]);
+
+    rebaseGameState(&pre, &post);
+    checkVillage(&pre, &post, pre.whoseTurn, handPos, &totalPassed, &totalFailed);
+  }
+
+
+  printf("** PHASE 2 :: %d TESTS :: Testing %s card on continous game...\n", TRIALS, TEST_CARD);
+  for (int i = 0; i < TRIALS; i++) {
+    rebaseGameState(&post, &pre);
+    pre.whoseTurn = randIntRange(0, pre.numPlayers - 1);
+
+    // if the current player doesn't have any village cards, then we don't
+    // need to run the test cases for this player.
+    handPos = card_first_hand_pos(&pre, pre.whoseTurn, village);
+    if (handPos == -1) continue;
+
+    checkVillage(&pre, &post, pre.whoseTurn, handPos, &totalPassed, &totalFailed);
+  }
+
+
+  // indicate test data
+  printf("\n** Total Individual Tests: %d | Passed: %d | Failed: %d\n", (totalPassed + totalFailed), totalPassed, totalFailed);
+  
+  return 0;
+}
