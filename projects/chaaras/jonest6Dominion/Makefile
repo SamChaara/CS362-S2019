@@ -75,6 +75,8 @@ runtests: testDrawCard
 
 #########
 
+testadventurer: dominion.o randomtestadventurer.c rngs.o
+	gcc -o randomtestadventurer randomtestadventurer.c -g dominion.o rngs.o $(CFLAGS)
 
 randomtestresults: testadventurer
 	randomtestadventurer
